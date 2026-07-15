@@ -1,0 +1,9 @@
+---
+- name: installation of tree
+  hosts: localhost
+  become: true
+  tasks:
+    - name: 
+      ansible.builtin.dnf:
+        name: tree
+        state: present 

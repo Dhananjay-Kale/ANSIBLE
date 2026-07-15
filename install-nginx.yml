@@ -1,0 +1,28 @@
+---
+- name: Install Nginx and manage files
+  hosts: localhost
+  become: true
+
+  tasks:
+
+    - name: Install Nginx
+      ansible.builtin.package:
+        name: nginx
+        state: present
+
+    - name: Create project directory
+      ansible.builtin.file:
+        path: /home/ec2-user/project
+        state: directory
+        mode: '0755'
+
+    - name: Create capgemini.txt file
+      ansible.builtin.file:
+        path: /root/capgemini.txt
+        state: touch
+
+    - name: Copy file to project directory
+      ansible.builtin.copy:
+        src: /root/capgemini.txt
+        dest: /home/ec2-user/project/capgemini.txt
+        remote_src: true

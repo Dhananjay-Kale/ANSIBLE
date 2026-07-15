@@ -1,0 +1,11 @@
+# day 1
+---
+- name: Create a file
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Create a file named fct.txt
+      ansible.builtin.file:
+        path: /root/fct.txt
+        state: touch

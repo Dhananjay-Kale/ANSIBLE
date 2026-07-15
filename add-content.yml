@@ -1,0 +1,9 @@
+---
+- name: Create a file and add content
+  hosts: localhost
+  become: true
+  tasks:
+  - name: create a file fct.txt and add the project name
+    ansible.builtin.copy:
+      dest: /home/ec2-user/tcs.txt
+      content: "project name: FCT"
