@@ -1,0 +1,31 @@
+--- 
+- name: installation of Lamp on target 
+  hosts: targetserver
+  become: true 
+  vars: 
+   pkg: 
+    - httpd
+    - php
+    - php-fpm 
+    - mariadb105-server
+   svc: 
+    - httpd 
+    - php-fpm 
+    - mariadb
+   file_path: /var/www/html/index.html
+  tasks: 
+  - name: installtion 
+    ansible.builtin.dnf:  
+      name: "{{pkg}}"
+      state: present
+  - name: start and enable
+    ansible.builtin.systemd_service: 
+      name: "{{item}}"
+      state: started 
+      enabled: true 
+    loop: "{{svc}}"
+  - name: deploymnet 
+    ansible.builtin.copy:
+      dest: "{{file_path}}"
+      content: "<h1>Ansible with variable on target server<h1>"
+     

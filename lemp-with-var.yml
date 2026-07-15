@@ -1,0 +1,51 @@
+# install lemp by using variable
+---
+- name: installtion of lemp
+  hosts: localhost 
+  become: true
+  # define variable
+  vars: 
+    web_pkg: nginx # assign value to variable
+    app_pkg: 
+     - php
+     - php-fpm
+    db_pkg: mariadb105-server
+    web_svc: nginx
+    app_svc: php-fpm 
+    db_svc: mariadb 
+    file_path: /usr/share/nginx/html/index.html
+  tasks: 
+  # Installtion
+  - name: install web package 
+    ansible.builtin.dnf: 
+      name: "{{web_pkg}}" # call the variable
+      state: present 
+  - name: install app package 
+    ansible.builtin.dnf:
+      name: "{{app_pkg}}" #call the variable
+      state: present 
+  - name: install db package 
+    ansible.builtin.dnf: 
+      name: "{{db_pkg}}"
+      state: present 
+  # start and enable
+  - name: start and enable web service 
+    ansible.builtin.systemd_service:
+      name: "{{web_svc}}"
+      state: started
+      enabled: true 
+  - name: start and enable app service 
+    ansible.builtin.systemd_service:
+      name: "{{app_svc}}"
+      state: started
+      enabled: true 
+  - name: start and enable db service 
+    ansible.builtin.systemd_service:
+      name: "{{db_svc}}"
+      state: started
+      enabled: true 
+  # deployment
+  - name: deploy application 
+    ansible.builtin.copy:
+      dest: "{{file_path}}"
+      content: "<h1>Ansible with variable<h1>"

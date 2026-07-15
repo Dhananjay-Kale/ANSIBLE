@@ -21,7 +21,7 @@
     ansible.builtin.systemd_service:
       name: httpd
       state: started
-      enabled: true
+      enbaled: true
   - name: start and enable mariadb
     ansible.builtin.systemd_service:
       name: mariadb

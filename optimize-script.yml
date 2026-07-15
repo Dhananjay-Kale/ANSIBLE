@@ -1,0 +1,36 @@
+--- 
+- name: Installtion of lamp 
+  hosts: localhost 
+  become: true 
+  vars: 
+    pkg: 
+     - httpd 
+     - php
+     - php-fpm 
+     - mariadb105-server 
+    svc: 
+     - httpd 
+     - php-fpm 
+     - mariadb 
+    file_path: /var/www/html/index.php
+  tasks: 
+  # Installtion
+  - name: installtion of all packages
+    ansible.builtin.dnf: 
+      name: "{{pkg}}" # use when you have performed single command on sinle value 
+      state: present 
+  # start and enable
+  - name: start and enable all services 
+    ansible.builtin.systemd_service: 
+      name: "{{item}}" # use when you have performed multiple commands on single value
+      state: started
+      enabled: true
+    loop: "{{svc}}"
+  # deployment 
+  - name: deploy application 
+    ansible.builtin.copy:
+      dest: "{{file_path}}"
+      content: | 
+       <?php 
+       phpinfo()
+       ?>
