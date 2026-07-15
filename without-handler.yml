@@ -1,0 +1,33 @@
+--- 
+- name: deploy app without handler 
+  hosts: localhost 
+  become: true
+  vars:
+   pkg : nginx
+   svc: nginx 
+   default_file_path: /usr/share/nginx/html/index.html
+   conf_file_path: /etc/nginx/conf.d/custom.conf # use this file when you want to pass the configuration dynamically 
+  tasks: 
+  - name: install nginx 
+    ansible.builtin.dnf:
+      name: "{{pkg}}"
+      state: present 
+  - name: start and enable nginx 
+    ansible.builtin.systemd_service:
+      name: "{{svc}}"
+      enabled: true 
+      state: started 
+  - name: add server block in configuration file 
+    ansible.builtin.blockinfile:
+      path: "{{conf_file_path}}"
+      create: yes 
+      block: | 
+        server {
+          listen 80;
+          root {{default_file_path}};
+          index index.html  
+        }
+  - name: deploy application 
+    ansible.builtin.copy:
+      dest: "{{default_file_path}}"
+      content: "<h1>Playbook without handler block</h1>"
